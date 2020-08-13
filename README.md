@@ -11,7 +11,7 @@ The Web Component source code is in Github Pages of this repository. To use in a
 <!DOCTYPE html>
 <html>
   <head>
-    <script type="text/javascript" src="https://baruchiro.github.io/pursuit-rotor-task/src/PursuitRotorTask.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/baruchiro/pursuit-rotor-task/src/PursuitRotorTask.js"></script>
   </head>
 
   <body>
