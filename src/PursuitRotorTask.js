@@ -1,6 +1,7 @@
 class PursuitRotorTask extends HTMLElement {
 
   static circleTime = "circle-time";
+  static roundsCount = "rounds-count";
   static componentR = "component-radius";
   static dotR = "dot-radius";
   static redAlert = 'red-alert';
@@ -19,6 +20,12 @@ class PursuitRotorTask extends HTMLElement {
       css: "--circle-time",
       default: "10",
       prefix: "s",
+      convert: parseInt,
+      proprty: true
+    },
+    [PursuitRotorTask.roundsCount]: {
+      default: "1",
+     
       convert: parseInt,
       proprty: true
     },
@@ -175,7 +182,7 @@ class PursuitRotorTask extends HTMLElement {
     if (!this.experienceTimeout) {
       this.experienceTimeout = setTimeout(
         this.onFinish,
-        this[PursuitRotorTask.circleTime] * 1000
+        this[PursuitRotorTask.circleTime] * 1000 * this[PursuitRotorTask.roundsCount]
       );
     }
   }

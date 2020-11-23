@@ -39,6 +39,7 @@ You can look on the `docs/index.html` file (also available in Github Pages [here
 - `component-radius` The radius of the circle bounded by a square. The square is the component size. Default: `"100px"`.
 - `dot-radius` The radius of the rotor. Default: `"40px"`.
 - `circle-time` The number of seconds to complete a round. Default: `"10"`.
+- `rounds-count` The amount of turns until the stop. Default: `"1"`.
 - `red-alert` Show **red** alert when the user mouse is **out** the rotor. Default: `"true"`
 - `green-alert` Show **green** alert when the user mouse is **in** the rotor. Default: `"true"`
 - `timer` Count down seconds before the experiment start. Default: `"0"`. (If the value is `0`, the experiment will start when the user on the rotor)
