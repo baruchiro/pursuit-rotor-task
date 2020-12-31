@@ -25,7 +25,7 @@ class PursuitRotorTask extends HTMLElement {
     },
     [PursuitRotorTask.roundsCount]: {
       default: "1",
-     
+
       convert: parseInt,
       proprty: true
     },
@@ -57,6 +57,17 @@ class PursuitRotorTask extends HTMLElement {
     }
 
     #PursuitRotorTask {
+      --min-size: calc(var(--radius) * 2 + var(--dot-radius) * 4);
+      min-width: var(--min-size);
+      min-height: var(--min-size);
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    #circle {
       width: calc(var(--radius) * 2);
       height: calc(var(--radius) * 2);
       border: 2px solid #ccc;
@@ -109,21 +120,24 @@ class PursuitRotorTask extends HTMLElement {
     }
   </style>
   <div id="PursuitRotorTask">
-    <div id="dot"></div>
-    <div id="alert">
-      <span>OFF</span>
+    <div id="circle">
+      <div id="dot"></div>
+      <div id="alert">
+        <span>OFF</span>
+      </div>
     </div>
   </div>`;
     this._shadowRoot = this.attachShadow({ mode: "open" });
     this._shadowRoot.appendChild(template.content.cloneNode(true));
 
-    this.$component = this._shadowRoot.getElementById("PursuitRotorTask");
+    this.$container = this._shadowRoot.getElementById("PursuitRotorTask");
+    this.$circle = this._shadowRoot.getElementById("circle");
     this.$dot = this._shadowRoot.getElementById("dot");
     this.$alert = this._shadowRoot.getElementById("alert");
     this.$message = this.$alert.querySelector("span");
 
-    this.onMouseMoveInterval = 600;
-    this.onMouseMoveTimeout = null;
+    this.checkingLocationIntervalTime = 50;
+    this.checkingLocationIntervalCtx = null;
 
     this.$dot.style.webkitAnimationPlayState = "paused"
 
@@ -133,6 +147,9 @@ class PursuitRotorTask extends HTMLElement {
       outCount: 0,
       inTimeMs: 0
     };
+
+    this.pointX = -1
+    this.pointY = -1
 
     this.temp = null;
   }
@@ -149,14 +166,6 @@ class PursuitRotorTask extends HTMLElement {
     if (attr.proprty) {
       this[name] = attr.convert ? attr.convert(newValue) : newValue;
     }
-
-    window.requestAnimationFrame(() => {
-      this.onMouseMoveInterval = PursuitRotorTask.ShlomoFormulaForRadiusTime(
-        this.getAttribute(PursuitRotorTask.circleTime),
-        this.$component.clientWidth,
-        this.$dot.clientWidth
-      );
-    });
   }
 
   connectedCallback() {
@@ -169,6 +178,11 @@ class PursuitRotorTask extends HTMLElement {
       );
 
     this.startAnimation()
+  }
+
+  disconnectedCallback() {
+    clearInterval(this.checkingLocationIntervalCtx)
+    clearTimeout(this.experienceTimeout)
   }
 
   startAnimation = () => {
@@ -188,13 +202,17 @@ class PursuitRotorTask extends HTMLElement {
   }
 
   registerMouseEvents = () => {
-    this.$dot.addEventListener("mousemove", this.dotEnter, { once: true });
-    this.$dot.addEventListener("mouseleave", this.dotLeave);
 
-    document.onmousemove = () => {
-      clearTimeout(this.onMouseMoveTimeout);
-      this.onMouseMoveTimeout = setTimeout(this.dotLeave, this.onMouseMoveInterval);
-    };
+    this.$container.onmousemove = (event) => {
+      this.pointX = event.pageX
+      this.pointY = event.pageY
+    }
+
+    this.checkingLocationIntervalCtx = setInterval(() => {
+      this.$dot === this._shadowRoot.elementFromPoint(this.pointX, this.pointY)
+        ? this.dotEnter()
+        : this.dotLeave()
+    }, this.checkingLocationIntervalTime)
   }
 
   dotLeave = () => {
@@ -265,13 +283,6 @@ class PursuitRotorTask extends HTMLElement {
     if (this.temp) this.data.inTimeMs += performance.now() - this.temp;
     this.$dot.style.webkitAnimationPlayState = "paused";
     this.dispatchEvent(new CustomEvent("finish", { detail: this.data }));
-  }
-
-  static ShlomoFormulaForRadiusTime(circleTs, componentWidth, dotWidth) {
-    const circleTms = circleTs * 1000
-    const componentR = componentWidth / 2
-    const dotR = dotWidth / 2
-    return (dotR * circleTms) / (Math.PI * componentR);
   }
 }
 
