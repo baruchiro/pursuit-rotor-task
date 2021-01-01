@@ -7,7 +7,7 @@ jobs:
       - run: echo 'TWEET=testing in production ${{github.repository}}' >> $GITHUB_ENV
       - uses: ethomson/send-tweet-action@v1
         with:
-          status: "test-${{ env.TWEET }}"
+          status: "New version of ${{github.repository}}\nVersion: 1.2.3\n@github #npm"
           consumer-key: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
           consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
           access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
