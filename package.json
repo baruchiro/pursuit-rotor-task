@@ -1,6 +1,6 @@
 {
     "name": "pursuit-rotor-task",
-    "version": "0.3.0",
+    "version": "1.0.0",
     "description": "Web Component for Pursuit Rotor Task to embed in web application",
     "main": "src/PursuitRotorTask.js",
     "repository": "https://github.com/baruchiro/pursuit-rotor-task.git",

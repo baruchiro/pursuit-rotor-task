@@ -5,6 +5,8 @@ Web Component for Pursuit Rotor Task to embed in web application.
 [![jsdelivr badge](https://data.jsdelivr.com/v1/package/npm/pursuit-rotor-task/badge)](https://www.jsdelivr.com/package/npm/pursuit-rotor-task)
 ![npm](https://img.shields.io/npm/dy/pursuit-rotor-task?label=npm&style=flat-square)
 
+Available as [Open Material in Gorilla.sc](https://gorilla.sc/openmaterials/107129)
+
 ## Usage
 
 ### npm Package
@@ -50,8 +52,10 @@ To get the task results, you can listen to the `finish` event.
 
 The `finish` event returns this data in the `detail`:
 
-- `outCount` Count the times the user left the rotor.
-- `inTimeMs` Count how many milliseconds the user was in the rotor.
+- `outCount` Count the times the user **left** the rotor.
+- `inCount` Count the times the user **enter** the rotor.
+- `inTimeMs` Count how many milliseconds the user was **in** the rotor.
+- `outTimeMs` Count how many milliseconds the user was **out** the rotor.
 
 ```js
 document

@@ -145,13 +145,17 @@ class PursuitRotorTask extends HTMLElement {
 
     this.data = {
       outCount: 0,
-      inTimeMs: 0
+      inCount: 0,
+      inTimeMs: 0,
+      outTimeMs: 0
     };
 
     this.pointX = -1
     this.pointY = -1
 
-    this.temp = null;
+    this.performanceTimeTaken = null;
+
+    this.onDot = false
   }
 
   static get observedAttributes() {
@@ -208,29 +212,46 @@ class PursuitRotorTask extends HTMLElement {
       this.pointY = event.pageY
     }
 
-    this.checkingLocationIntervalCtx = setInterval(() => {
-      this.$dot === this._shadowRoot.elementFromPoint(this.pointX, this.pointY)
+    this.checkingLocationIntervalCtx = setInterval(
+      this.handleMouseLocation,
+      this.checkingLocationIntervalTime
+    )
+  }
+
+  handleMouseLocation = () => {
+    const isOnDot = this.$dot === this._shadowRoot.elementFromPoint(this.pointX, this.pointY)
+    if (this.onDot !== isOnDot) {
+      this.onDot = isOnDot
+      this.onDot
         ? this.dotEnter()
         : this.dotLeave()
-    }, this.checkingLocationIntervalTime)
+    }
+  }
+
+  takeTime = () => {
+    if (!this.performanceTimeTaken) {
+      this.performanceTimeTaken = performance.now();
+      return 0;
+    }
+
+    const taken = performance.now() - this.performanceTimeTaken;
+    this.performanceTimeTaken = performance.now();
+    return taken;
   }
 
   dotLeave = () => {
-    if (this.temp) {
-      this.data.inTimeMs += performance.now() - this.temp;
-      this.temp = null;
-      this.data.outCount++;
-    }
+    this.data.inTimeMs += this.takeTime();
+    this.data.outCount++;
+
     this.showRedAlert();
   }
 
   dotEnter = () => {
-    this.temp = performance.now();
+    this.data.outTimeMs += this.takeTime();
+    this.data.inCount++;
     this.showGreenAlert();
 
     this.startExperienceTimeout()
-
-    this.$dot.addEventListener("mouseenter", this.dotEnter);
   }
 
   showRedAlert = () => {
@@ -250,12 +271,6 @@ class PursuitRotorTask extends HTMLElement {
       this.$message.innerText = "ON";
     } else {
       this.$alert.style.display = 'none'
-    }
-  }
-
-  takeTime = () => {
-    if (this.enterTime) {
-      this.data.inTimeMs += new Date() - this.enterTime;
     }
   }
 
@@ -280,7 +295,7 @@ class PursuitRotorTask extends HTMLElement {
   }
 
   onFinish = () => {
-    if (this.temp) this.data.inTimeMs += performance.now() - this.temp;
+    this.data[this.onDot ? 'inTimeMs' : 'outTimeMs'] += this.takeTime();
     this.$dot.style.webkitAnimationPlayState = "paused";
     this.dispatchEvent(new CustomEvent("finish", { detail: this.data }));
   }
