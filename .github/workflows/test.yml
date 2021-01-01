@@ -4,9 +4,10 @@ jobs:
   tweet:
     runs-on: ubuntu-latest
     steps:
+      - run: echo 'TWEET="testing in production https://github.com/ethomson/send-tweet-action"' >> $GITHUB_ENV
       - uses: ethomson/send-tweet-action@v1
         with:
-          status: "testing in production https://github.com/ethomson/send-tweet-action"
+          status: ${{ TWEET }}
           consumer-key: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
           consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
           access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
