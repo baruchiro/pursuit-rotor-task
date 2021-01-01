@@ -70,7 +70,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
   publish-npm:
-    needs: [publish-gpr]
+    needs: [version, publish-gpr]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -81,3 +81,10 @@ jobs:
       - run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - uses: ethomson/send-tweet-action@ee76e315ba1f8fed3444282c3c8be0fbb369c751
+        with:
+          status: "${{github.repository}} V${{needs.version.outputs.packageVersion}} is published!\n\nhttps://www.jsdelivr.com/package/npm/pursuit-rotor-task\n\n@github #send_tweet_action @npmjs #pursuit_rotor_task @jsDelivr\n\nAvailable in Github"
+          consumer-key: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
+          consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
+          access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
