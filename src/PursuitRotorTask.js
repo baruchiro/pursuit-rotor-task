@@ -181,6 +181,11 @@ class PursuitRotorTask extends HTMLElement {
         this.setAttribute(attr, PursuitRotorTask.attributes[attr].default)
       );
 
+    this.$container.onmousemove = (event) => {
+      this.pointX = event.pageX
+      this.pointY = event.pageY
+    }
+
     this.startAnimation()
   }
 
@@ -192,7 +197,12 @@ class PursuitRotorTask extends HTMLElement {
   startAnimation = () => {
     const initPrm = this[PursuitRotorTask.timer] > 0 ? this.countDown() : Promise.resolve(this.showRedAlert())
     initPrm
-      .then(this.registerMouseEvents)
+      .then(() => {
+        this.checkingLocationIntervalCtx = setInterval(
+          this.handleMouseLocation,
+          this.checkingLocationIntervalTime
+        )
+      })
       .then(() => this.$dot.style.webkitAnimationPlayState = "running")
   }
 
@@ -203,19 +213,6 @@ class PursuitRotorTask extends HTMLElement {
         this[PursuitRotorTask.circleTime] * 1000 * this[PursuitRotorTask.roundsCount]
       );
     }
-  }
-
-  registerMouseEvents = () => {
-
-    this.$container.onmousemove = (event) => {
-      this.pointX = event.pageX
-      this.pointY = event.pageY
-    }
-
-    this.checkingLocationIntervalCtx = setInterval(
-      this.handleMouseLocation,
-      this.checkingLocationIntervalTime
-    )
   }
 
   handleMouseLocation = () => {
