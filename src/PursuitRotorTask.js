@@ -136,7 +136,7 @@ class PursuitRotorTask extends HTMLElement {
     this.$alert = this._shadowRoot.getElementById("alert");
     this.$message = this.$alert.querySelector("span");
 
-    this.checkingLocationIntervalTime = 50;
+    this.checkingLocationIntervalTime = 1;
     this.checkingLocationIntervalCtx = null;
 
     this.$dot.style.webkitAnimationPlayState = "paused"
