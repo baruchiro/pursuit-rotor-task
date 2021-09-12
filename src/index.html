@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="./PursuitRotorTask.js"></script>
+  </head>
+
+  <body>
+    <pursuit-rotor-task
+      component-radius="100px"
+      dot-radius="40px"
+      circle-time="6"
+      rounds-count="3"
+      green-alert="true"
+      red-alert="true"
+      timer="5"
+    />
+    <script>
+      document
+        .querySelector("pursuit-rotor-task")
+        .addEventListener("finish", (e) => console.log(e.detail));
+    </script>
+  </body>
+</html>

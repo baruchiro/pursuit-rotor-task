@@ -62,3 +62,11 @@ document
   .querySelector("pursuit-rotor-task")
   .addEventListener("finish", (e) => console.log(e.detail));
 ```
+
+## Contributing
+
+To run it locally, you just need to clone the repository and open the `src/index.html` file.
+
+To control the **component attributes**, edit the `index.html` file.
+
+To see the results, open the browser DevTools (F12) and look at the console.
